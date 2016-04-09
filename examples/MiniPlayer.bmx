@@ -22,6 +22,8 @@ Incbin "click.wav"
 TMaxModRtAudioDriver.Init("LINUX_PULSE")
 ?macos
 TMaxModRtAudioDriver.Init("MACOS_CORE")
+?win32
+TMaxModRtAudioDriver.Init("WINDOWS_DS")
 ?
 
 SetAudioDriver("MaxMod RtAudio")
