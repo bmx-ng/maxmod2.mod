@@ -44,18 +44,18 @@ Import "rtaudiodriver.cpp"
 Import "RtAudioOS.cpp"
 
 Extern
-	Function CreateAudioDriver_RtAudio:IMaxModAudioDriver(api:int, showWarnings:int)
+	Function CreateAudioDriver_RtAudio:IMaxModAudioDriver(api:Int, showWarnings:Int)
 	Function CloseAudioDriver_RtAudio(Driver:IMaxModAudioDriver)
 	'ron: added functionality to disable warnings
-	Function RtAudio_showWarnings(Driver:IMaxModAudioDriver, bool:int)
+	Function RtAudio_showWarnings(Driver:IMaxModAudioDriver, bool:Int)
 End Extern
 
 Type TMaxModRtAudioDriver Extends TMaxModDriver
 
 	'ron: we store the active one in TMaxModDriver
-	Global Active:TMaxModRtAudioDriver
+'	Global Active:TMaxModRtAudioDriver
 	'ron: show the warnings of rtAudio ?
-	Global optShowWarnings:int = True
+	Global optShowWarnings:Int = True
 
 	Method Delete()
 		CloseAudioDriver_RtAudio(_driver)
@@ -63,10 +63,10 @@ Type TMaxModRtAudioDriver Extends TMaxModDriver
 
 	'register on create
 	Method New()
-		self.registerAPIs()
+		Self.registerAPIs()
 	End Method
 
-	Function CreateSpecific:TMaxModDriver( name:string, api:string)
+	Function CreateSpecific:TMaxModDriver( name:String, api:String)
 '		if Active <> null then CloseAudioDriver_RtAudio( Active._driver)
 		Active = New TMaxModRtAudioDriver
 		Active._driver = CreateAudioDriver_RtAudio( Active.GetAPIid(api), optShowWarnings)
@@ -76,17 +76,17 @@ Type TMaxModRtAudioDriver Extends TMaxModDriver
 	End Function
 
 	Method registerAPIs()
-		self.AddAPI(0, "AUTOMATIC")	'= "UNSPECIFIED"
+		Self.AddAPI(0, "AUTOMATIC")	'= "UNSPECIFIED"
 		?Linux
-		self.AddAPI(1, "LINUX_ALSA")
-		self.AddAPI(2, "LINUX_PULSE")
-		self.AddAPI(3, "LINUX_OSS")
-		self.AddAPI(4, "UNIX_JACK")
+		Self.AddAPI(1, "LINUX_ALSA")
+		Self.AddAPI(2, "LINUX_PULSE")
+		Self.AddAPI(3, "LINUX_OSS")
+		Self.AddAPI(4, "UNIX_JACK")
 		?MacOS
-		self.AddAPI(5, "MACOSX_CORE")
+		Self.AddAPI(5, "MACOSX_CORE")
 		?Win32
-		self.AddAPI(6, "WINDOWS_ASIO")
-		self.AddAPI(7, "WINDOWS_DS")
+		Self.AddAPI(6, "WINDOWS_ASIO")
+		Self.AddAPI(7, "WINDOWS_DS")
 		?
 	End Method
 
@@ -100,21 +100,21 @@ Type TMaxModRtAudioDriver Extends TMaxModDriver
 	End Function
 
 
-	Function showWarnings(bool:int)
+	Function showWarnings(bool:Int)
 		optShowWarnings = bool
-		if Active
+		If Active
 			RtAudio_showWarnings(Active._driver, optShowWarnings)
-		endif
+		EndIf
 	End Function
 
 	'registers audio driver (with custom api)
-	Function Init(api:string="AUTOMATIC")
+	Function Init(api:String="AUTOMATIC")
 		TMaxModRtAudioDriver.CreateSpecific("MaxMod RtAudio", api)
 		TMaxModStreamDriver.AddDriver(TMaxModRtAudioDriver.Active,"MaxMod RtAudio")
 	End Function
 End Type
 
-rem
+Rem
 		?Linux
 		'default to Linux pulse on linux
 		TMaxModRtAudioDriver.CreateSpecific("MaxMod RtAudio", "LINUX_PULSE")

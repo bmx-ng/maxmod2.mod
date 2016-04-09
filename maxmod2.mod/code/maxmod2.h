@@ -117,7 +117,7 @@ extern "C" {
 		public:
 		~MMThread();
 		void Start(void* data);
-		int Stop();
+		void * Stop();
 		void SetPriority(int Priority);
 	};
 

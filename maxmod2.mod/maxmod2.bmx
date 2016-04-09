@@ -37,54 +37,81 @@ Const MM_SEQUENCE	:Int = 5
 ' ---------------------------------------------------------------------------------------
 
 Extern "C"
-
+?bmxng
+	Interface IMaxModAudioDriver
+?Not bmxng
 	Type IMaxModAudioDriver
-		Method SetAPI:Int				(api:int)
+?
+		Method SetAPI:Int				(api:Int)
 		Method Startup:Int				()
 		Method Shutdown:Int				()
 		Method CreateSound:IMaxModMusic	(sample:TAudioSample, flags:Int)
 		Method AllocChannel:IMaxModChannel	()
+?bmxng
+	End Interface
+?Not bmxng
 	EndType
+?
 
+?bmxng
+	Interface IMaxModMusic
+?Not bmxng
 	Type IMaxModMusic
+?
 		Method FillBuffer:Int			(buffer:Byte Ptr, length:Int)
-		Method Seek:Int				(position:Int, mode:Int)
-		Method GetLength:Int			(mode:Int)
-		Method GetPosition:Int			(mode:Int)
+		Method Seek:Int				(position:Int, Mode:Int)
+		Method GetLength:Int			(Mode:Int)
+		Method GetPosition:Int			(Mode:Int)
 		Method GetStatus:Int			()
 		Method SetStatus				(state:Int)
 		Method GetChannels:Int			()
 		Method GetBits:Int				()
 		Method GetSampleRate:Int			()
 		Method GetLoopMode:Int			()
-		Method SetLoopMode				(mode:Int)
+		Method SetLoopMode				(Mode:Int)
 		Method IsSeekable:Int			()
 		Method AddRef					()
 		Method RemoveRef				()
 		Method RefCount:Int				()
 		Method Cue:IMaxModChannel		(alloced_channel:IMaxModChannel)
+?bmxng
+	End Interface
+?Not bmxng
 	EndType
+?
 
+?bmxng
+	Interface IMaxModEffect
+?Not bmxng
 	Type IMaxModEffect
+?
 		Method FillBuffer:Int			(buffer:Byte Ptr, length:Int)
-		Method Seek:Int				(position:Int, mode:Int)
-		Method GetLength:Int			(mode:Int)
-		Method GetPosition:Int			(mode:Int)
+		Method Seek:Int				(position:Int, Mode:Int)
+		Method GetLength:Int			(Mode:Int)
+		Method GetPosition:Int			(Mode:Int)
 		Method GetStatus:Int			()
 		Method SetStatus				(state:Int)
 		Method GetChannels:Int			()
 		Method GetBits:Int				()
 		Method GetSampleRate:Int			()
 		Method GetLoopMode:Int			()
-		Method SetLoopMode				(mode:Int)
+		Method SetLoopMode				(Mode:Int)
 		Method IsSeekable:Int			()
 		Method AddRef					()
 		Method RemoveRef				()
 		Method RefCount:Int				()
 		Method Cue:IMaxModChannel		(alloced_channel:IMaxModChannel)
+?bmxng
+	End Interface
+?Not bmxng
 	EndType
+?
 
+?bmxng
+	Interface IMaxModChannel
+?Not bmxng
 	Type IMaxModChannel
+?
 		Method Stop					()
 		Method SetPaused				(paused:Int)
 		Method SetVolume				(volume:Float)
@@ -92,26 +119,38 @@ Extern "C"
 		Method SetDepth				(depth:Float)
 		Method SetRate					(rate:Float)
 		Method Playing:Int				()
-		Method GetPosition:Int			(mode:Int)
-		Method GetLength:Int               (mode:Int)
-		Method Seek:Int				(position:Int, mode:Int)
+		Method GetPosition:Int			(Mode:Int)
+		Method GetLength:Int               (Mode:Int)
+		Method Seek:Int				(position:Int, Mode:Int)
 		Method GetLoopMode:Int			()
 		Method SetLoopMode				(bool:Int)
 		Method SetLoopPoints			(startsample:Int,endsample:Int)
 		Method GetUV					(l:Double Var,r:Double Var)
 		Method IsSeekable:Int              ()
+?bmxng
+	End Interface
+?Not bmxng
 	EndType
+?
 
+?bmxng
+	Interface IMaxModStream
+?Not bmxng
 	Type IMaxModStream
+?
 		Method Close					()
 		Method Eof:Int					()
 		Method Size:Long				()
 		Method Position:Long			()
 		Method Seek:Long				(pos:Long)
-		Method SeekFrom:Long			(pos:Long, mode:Int)
+		Method SeekFrom:Long			(pos:Long, Mode:Int)
 		Method Flush:Int				()
 		Method Read:Long				(buf:Byte Ptr, count:Long)
+?bmxng
+	End Interface
+?Not bmxng
 	EndType
+?
 
 	Function MaxMod_SetGlobalVolume(vol:Double)
 	Function MaxMod_FreeChannel(channel:IMaxModChannel)
@@ -132,7 +171,7 @@ Extern "C"
 	Function CreateAudioStream_Memory:IMaxModChannel(Music:IMaxModMusic,data:Byte Ptr)
 	Function CloseAudioStream_Memory(Stream:IMaxModChannel)
 
-	Function MaxMod_SetChannelRateAdjuster(channel:IMaxModChannel, adjuster:double)
+	Function MaxMod_SetChannelRateAdjuster(channel:IMaxModChannel, adjuster:Double)
 
 	Function MaxMod_AddChannelEffect(IMaxModChannel:Byte Ptr, IMaxModEffect:Byte Ptr)
 '	Function MaxMod_RemoveChannelEffect(IMaxModEffect:Byte Ptr)
@@ -188,7 +227,7 @@ EndType
 
 'ron: better getter for current audio driver
 Function GetCurrentAudioDriver:TMaxModDriver()
-	return TMaxModDriver.Active
+	Return TMaxModDriver.Active
 End Function
 
 Type TMaxModDriver Extends TAudioDriver
@@ -200,7 +239,7 @@ Type TMaxModDriver Extends TAudioDriver
 
 	'ron: to access currently set api
 	'default is automatic
-	Field _currentAPI:int = 0
+	Field _currentAPI:Int = 0
 	'ron: amount of apis the driver handles
 	Global APIs:TMap = CreateMap()
 
@@ -208,56 +247,56 @@ Type TMaxModDriver Extends TAudioDriver
 		Return _name
 	EndMethod
 
-	Method AddAPI(id:int, name:string)
-		self.APIs.Insert(string(id), name)
+	Method AddAPI(id:Int, name:String)
+		Self.APIs.Insert(String(id), name)
 	End Method
 
-	Method RemoveAPI(id:int)
-		self.APIs.Remove(string(id))
+	Method RemoveAPI(id:Int)
+		Self.APIs.Remove(String(id))
 	End Method
 
 	'ron - setter if driver has different APIs
-	Method SetAPI:int(api:int)
-		self._currentAPI = api
-		return _driver.SetAPI(api)
+	Method SetAPI:Int(api:Int)
+		Self._currentAPI = api
+		Return _driver.SetAPI(api)
 	End Method
 
 	'ron - setter if driver has different APIs
 	'default is first api (0)
-	Method SetNamedAPI:int(namedAPI:string)
-		return self.SetApi( GetAPIid(namedAPI) )
+	Method SetNamedAPI:Int(namedAPI:String)
+		Return Self.SetApi( GetAPIid(namedAPI) )
 	End Method
 
-	Method GetAPIid:int(namedAPI:string)
+	Method GetAPIid:Int(namedAPI:String)
 		namedAPI = namedAPI.toUpper()
-		for local key:string = eachin self.APIs.Keys()
-			if namedAPI = string( self.APIs.ValueForKey(key) )
-				return int(key)
-			endif
+		For Local key:String = EachIn Self.APIs.Keys()
+			If namedAPI = String( Self.APIs.ValueForKey(key) )
+				Return Int(key)
+			EndIf
 		Next
 		'set to default
-		return 0
+		Return 0
 	End Method
 
-	Method GetAPIName:string( api:int = -1)
-		for local key:string = eachin self.APIs.Keys()
-			if int(key) = api then return string( self.APIs.ValueForKey(key) )
+	Method GetAPIName:String( api:Int = -1)
+		For Local key:String = EachIn Self.APIs.Keys()
+			If Int(key) = api Then Return String( Self.APIs.ValueForKey(key) )
 		Next
-		return "AUTOMATIC"
+		Return "AUTOMATIC"
 	End Method
 
 	'ron: get a array of accepted API names
-	Method GetAPINames:object[]()
-		local res:TList = CreateList()
+	Method GetAPINames:Object[]()
+		Local res:TList = CreateList()
 		res.addLast("AUTOMATIC")
-		for local str:string = eachin self.APIs.Values()
+		For Local str:String = EachIn Self.APIs.Values()
 			res.addLast( str )
 		Next
-		return res.toArray()
+		Return res.toArray()
 	End Method
 
 	Method registerAPIs()
-		self.AddAPI(0, "AUTOMATIC")	'= "UNSPECIFIED"
+		Self.AddAPI(0, "AUTOMATIC")	'= "UNSPECIFIED"
 	End Method
 
 	Method Startup:Int()
@@ -337,27 +376,27 @@ Type TMaxModChannel Extends TChannel
 		MaxMod_FreeChannel(_channel)
 	End Method
 
-	Method Stop()
+	Method Stop:Int()
 		_channel.Stop()
 	End Method
 
-	Method SetPaused( paused:Int )
+	Method SetPaused:Int( paused:Int )
 		_channel.SetPaused paused
 	End Method
 
-	Method SetVolume( volume# )
+	Method SetVolume:Int( volume# )
 		_channel.SetVolume volume
 	End Method
 
-	Method SetPan( pan# )
+	Method SetPan:Int( pan# )
 		_channel.SetPan pan
 	End Method
 
-	Method SetDepth( depth# )
+	Method SetDepth:Int( depth# )
 		_channel.SetDepth depth
 	End Method
 
-	Method SetRate( rate# )
+	Method SetRate:Int( rate# )
 		_channel.SetRate rate
 	End Method
 
@@ -392,16 +431,16 @@ Type TMusic
 		Return Music.FillBuffer(buffer,length)
 	EndMethod
 
-	Method Seek:Int(position:Int,mode:Int)
-		Return Music.Seek(position,mode)
+	Method Seek:Int(position:Int,Mode:Int)
+		Return Music.Seek(position,Mode)
 	EndMethod
 
 	Method IsSeekable:Int()
 		Return Music.IsSeekable()
 	EndMethod
 
-	Method GetLength:Int(mode:Int=MM_BYTES)
-		Return Music.GetLength(mode)
+	Method GetLength:Int(Mode:Int=MM_BYTES)
+		Return Music.GetLength(Mode)
 	EndMethod
 
 	Method GetStatus:Int()
@@ -409,11 +448,11 @@ Type TMusic
 	EndMethod
 
 	Method SetStatus:Int(state:Int)
-		Return Music.SetStatus(state)
+		Music.SetStatus(state)
 	EndMethod
 
-	Method GetPosition:Int(mode:Int=MM_BYTES)
-		Return Music.GetPosition(mode)
+	Method GetPosition:Int(Mode:Int=MM_BYTES)
+		Return Music.GetPosition(Mode)
 	EndMethod
 
 	Method GetChannels:Int()
@@ -432,8 +471,8 @@ Type TMusic
 		Return Music.GetLoopMode()
 	EndMethod
 
-	Method SetLoopMode(mode:Int)
-		Music.SetLoopMode(mode)
+	Method SetLoopMode(Mode:Int)
+		Music.SetLoopMode(Mode)
 	EndMethod
 
 	Method GetFormat:Int()
@@ -571,7 +610,7 @@ Type MaxModLoader
 				Stream = MaxMod_CreateStream(Str)
 			EndIf
 		ElseIf Bank
-			Stream = MaxMod_CreateMemStream(Bank.Buf(), Bank.Size())
+			Stream = MaxMod_CreateMemStream(Bank.Buf(), Int(Bank.Size()))
 			URL = "Bank"
 		EndIf
 

@@ -20,6 +20,8 @@ Incbin "eject.wav"
 Incbin "click.wav"
 ?Linux
 TMaxModRtAudioDriver.Init("LINUX_PULSE")
+?macos
+TMaxModRtAudioDriver.Init("MACOS_CORE")
 ?
 
 SetAudioDriver("MaxMod RtAudio")
@@ -123,17 +125,17 @@ Type TApp
 					Case VolSlider
 						Local vol! = (1!/128)*Event.Data
 						SetStatusText Win,"Volume="+Float(vol)
-						If Stream SetChannelVolume(Stream,vol)
+						If Stream SetChannelVolume(Stream,Float(vol))
 
 					Case RateSlider
 						Pitch = 1+((1!/128)*(Event.Data-128))
 						SetStatusText Win,"Rate="+Float(pitch)
-						If Stream SetChannelRate(Stream,pitch)
+						If Stream SetChannelRate(Stream,Float(pitch))
 
 					Case PanSlider
 						Local pan! = (1!/128)*(Event.Data-128)
 						SetStatusText Win,"Pan="+Float(pan)
-						If Stream SetChannelPan(Stream,pan)
+						If Stream SetChannelPan(Stream,Float(pan))
 
 					Case SeekZero
 						If Stream ChannelSeek(Stream,0)
@@ -180,9 +182,9 @@ Type TApp
 					L = (h-2)*L
 					R = (h-2)*R
 					SetColor(0,255,255)
-					DrawRect w-20,(h-1)-L,9,L
+					DrawRect w-20,Float((h-1)-L),9,Float(L)
 					SetColor(255,255,0)
-					DrawRect w-10,(h-1)-R,9,R
+					DrawRect w-10,Float((h-1)-R),9,Float(R)
 
 					Flip
 				EndIf
@@ -200,8 +202,8 @@ Type TApp
 		SetGadgetText(SizeText,Millisecs2Time(GetChannelLength(Stream,MM_MILLISECS)))
 		SetGadgetText(Play,"Pause")	; Status=1
 		SetSliderRange(Slider,0,GetChannelLength(Stream,MM_SAMPLES)/512)
-		SetChannelVolume(Stream,(1!/128)*SliderValue(VolSlider))
-		SetChannelRate(Stream,(1!/128)*SliderValue(RateSlider))
+		SetChannelVolume(Stream,Float((1!/128)*SliderValue(VolSlider)))
+		SetChannelRate(Stream,Float((1!/128)*SliderValue(RateSlider)))
 		If Not ChannelSeekable(Stream)
 			DisableGadget(Slider)
 		Else

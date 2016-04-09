@@ -62,10 +62,10 @@
 		status = true;
 	}
 
-	int MMThread::Stop(){
+	void* MMThread::Stop(){
 		void* p=0;
 		pthread_join( handle,&p );
-		return (int)p;
+		return p;
 	}
 
 	void MMThread::SetPriority(int Priority){
