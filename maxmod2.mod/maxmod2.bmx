@@ -303,8 +303,8 @@ Type TMaxModDriver Extends TAudioDriver
 		Return _driver.Startup()
 	End Method
 
-	Method Shutdown:Int()
-		Return _driver.Shutdown()
+	Method Shutdown()
+		_driver.Shutdown()
 	End Method
 
 	Method CreateSound:TMaxModSound( sample:TAudioSample,flags:Int )
@@ -376,27 +376,27 @@ Type TMaxModChannel Extends TChannel
 		MaxMod_FreeChannel(_channel)
 	End Method
 
-	Method Stop:Int()
+	Method Stop()
 		_channel.Stop()
 	End Method
 
-	Method SetPaused:Int( paused:Int )
+	Method SetPaused( paused:Int )
 		_channel.SetPaused paused
 	End Method
 
-	Method SetVolume:Int( volume# )
+	Method SetVolume( volume# )
 		_channel.SetVolume volume
 	End Method
 
-	Method SetPan:Int( pan# )
+	Method SetPan( pan# )
 		_channel.SetPan pan
 	End Method
 
-	Method SetDepth:Int( depth# )
+	Method SetDepth( depth# )
 		_channel.SetDepth depth
 	End Method
 
-	Method SetRate:Int( rate# )
+	Method SetRate( rate# )
 		_channel.SetRate rate
 	End Method
 
